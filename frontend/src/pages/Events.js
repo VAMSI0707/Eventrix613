@@ -4,6 +4,21 @@ import axios from 'axios';
 import API_CONFIG from '../config/api';
 import './Events.css';
 
+// Utility function to convert 24-hour to 12-hour format
+const formatTime = (timeStr) => {
+  if (!timeStr) return '';
+  if (/AM|PM/i.test(timeStr)) return timeStr;
+  
+  const [hours, minutes] = timeStr.split(':');
+  let hour = parseInt(hours);
+  const period = hour >= 12 ? 'PM' : 'AM';
+  
+  if (hour === 0) hour = 12;
+  else if (hour > 12) hour -= 12;
+  
+  return `${hour}:${minutes} ${period}`;
+};
+
 function Events() {
   const [events, setEvents] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -128,7 +143,7 @@ function Events() {
                         <circle cx="12" cy="12" r="10"></circle>
                         <polyline points="12 6 12 12 16 14"></polyline>
                       </svg>
-                      <span>{event.time}</span>
+                      <span>{formatTime(event.time)}</span>
                     </div>
                   )}
                   <div className="detail-item">

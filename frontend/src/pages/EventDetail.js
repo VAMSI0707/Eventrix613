@@ -5,6 +5,24 @@ import { toast } from 'react-toastify';
 import API_CONFIG from '../config/api';
 import './EventDetail.css';
 
+// Utility function to convert 24-hour to 12-hour format
+const formatTime = (timeStr) => {
+  if (!timeStr) return '';
+  
+  // If already in 12-hour format, return as is
+  if (/AM|PM/i.test(timeStr)) return timeStr;
+  
+  // Convert 24-hour format to 12-hour
+  const [hours, minutes] = timeStr.split(':');
+  let hour = parseInt(hours);
+  const period = hour >= 12 ? 'PM' : 'AM';
+  
+  if (hour === 0) hour = 12;
+  else if (hour > 12) hour -= 12;
+  
+  return `${hour}:${minutes} ${period}`;
+};
+
 function EventDetail({ user }) {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -257,7 +275,7 @@ function EventDetail({ user }) {
             <strong>Date:</strong> {new Date(event.date).toLocaleDateString()}
           </div>
           <div className="detail-item">
-            <strong>Time:</strong> {event.time}
+            <strong>Time:</strong> {formatTime(event.time)}
           </div>
           <div className="detail-item">
             <strong>Venue:</strong> {event.venue}

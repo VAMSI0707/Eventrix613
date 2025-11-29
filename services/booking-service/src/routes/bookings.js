@@ -416,4 +416,34 @@ router.patch('/event/:eventId/cancel-all', async (req, res) => {
   }
 });
 
+// PATCH /api/bookings/event/:eventId/sync - Sync event details to bookings
+router.patch('/event/:eventId/sync', async (req, res) => {
+  try {
+    const { eventId } = req.params;
+    const { eventTitle, eventDate, eventVenue, eventTime } = req.body;
+
+    // Update all bookings for this event with new event details
+    const result = await Booking.updateMany(
+      { eventId },
+      { 
+        $set: { 
+          eventTitle,
+          eventDate,
+          eventVenue,
+          eventTime,
+          updatedAt: Date.now()
+        } 
+      }
+    );
+
+    res.json({
+      message: 'Bookings synced successfully',
+      modifiedCount: result.modifiedCount
+    });
+  } catch (err) {
+    console.error('Sync bookings error:', err);
+    res.status(500).json({ error: 'Failed to sync bookings', details: err.message });
+  }
+});
+
 module.exports = router;

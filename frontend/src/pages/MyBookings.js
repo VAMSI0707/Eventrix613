@@ -5,6 +5,21 @@ import { toast } from 'react-toastify';
 import API_CONFIG from '../config/api';
 import './MyBookings.css';
 
+// Utility function to convert 24-hour to 12-hour format
+const formatTime = (timeStr) => {
+  if (!timeStr) return '';
+  if (/AM|PM/i.test(timeStr)) return timeStr;
+  
+  const [hours, minutes] = timeStr.split(':');
+  let hour = parseInt(hours);
+  const period = hour >= 12 ? 'PM' : 'AM';
+  
+  if (hour === 0) hour = 12;
+  else if (hour > 12) hour -= 12;
+  
+  return `${hour}:${minutes} ${period}`;
+};
+
 function MyBookings() {
   const [bookings, setBookings] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -170,7 +185,7 @@ function MyBookings() {
                       </div>
                       <div>
                         <span className="label">Time</span>
-                        <span className="value">{booking.eventTime}</span>
+                        <span className="value">{formatTime(booking.eventTime)}</span>
                       </div>
                     </div>
                   )}

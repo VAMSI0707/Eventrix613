@@ -117,6 +117,19 @@ router.put('/:id', verifyToken, isAdmin, async (req, res) => {
       return res.status(404).json({ error: 'Event not found' });
     }
     
+    // Update booking records with new event details
+    try {
+      await axios.patch(`${BOOKING_SERVICE_URL}/api/bookings/event/${req.params.id}/sync`, {
+        eventTitle: event.title,
+        eventDate: event.date,
+        eventVenue: event.venue,
+        eventTime: event.time
+      });
+    } catch (bookingErr) {
+      console.error('Failed to sync bookings:', bookingErr.message);
+      // Continue even if booking sync fails
+    }
+    
     res.json({
       message: 'Event updated successfully',
       event
