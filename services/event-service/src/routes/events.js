@@ -136,6 +136,14 @@ router.delete('/:id', verifyToken, isAdmin, async (req, res) => {
       return res.status(404).json({ error: 'Event not found' });
     }
     
+    // Cancel all bookings for this event
+    try {
+      await axios.patch(`${BOOKING_SERVICE_URL}/api/bookings/event/${req.params.id}/cancel-all`);
+    } catch (bookingErr) {
+      console.error('Failed to cancel bookings:', bookingErr.message);
+      // Continue even if booking cancellation fails
+    }
+    
     res.json({
       message: 'Event deleted successfully',
       event
@@ -261,6 +269,61 @@ router.get('/:id/feedback', async (req, res) => {
   } catch (err) {
     console.error('Get feedback error:', err);
     res.status(500).json({ error: 'Failed to fetch feedback', details: err.message });
+  }
+});
+
+// PUT /api/events/:id/feedback/:feedbackId - Edit feedback
+router.put('/:id/feedback/:feedbackId', verifyToken, async (req, res) => {
+  try {
+    const { rating, comment } = req.body;
+
+    if (!rating || rating < 1 || rating > 5) {
+      return res.status(400).json({ error: 'Rating must be between 1 and 5' });
+    }
+
+    const feedback = await Feedback.findById(req.params.feedbackId);
+    if (!feedback) {
+      return res.status(404).json({ error: 'Feedback not found' });
+    }
+
+    if (feedback.userId !== req.user._id) {
+      return res.status(403).json({ error: 'You can only edit your own feedback' });
+    }
+
+    feedback.rating = rating;
+    feedback.comment = comment || '';
+    feedback.updatedAt = new Date();
+    feedback.isEdited = true;
+    await feedback.save();
+
+    res.json({
+      message: 'Feedback updated successfully',
+      feedback
+    });
+  } catch (err) {
+    console.error('Update feedback error:', err);
+    res.status(500).json({ error: 'Failed to update feedback', details: err.message });
+  }
+});
+
+// DELETE /api/events/:id/feedback/:feedbackId - Delete feedback
+router.delete('/:id/feedback/:feedbackId', verifyToken, async (req, res) => {
+  try {
+    const feedback = await Feedback.findById(req.params.feedbackId);
+    if (!feedback) {
+      return res.status(404).json({ error: 'Feedback not found' });
+    }
+
+    if (feedback.userId !== req.user._id) {
+      return res.status(403).json({ error: 'You can only delete your own feedback' });
+    }
+
+    await Feedback.findByIdAndDelete(req.params.feedbackId);
+
+    res.json({ message: 'Feedback deleted successfully' });
+  } catch (err) {
+    console.error('Delete feedback error:', err);
+    res.status(500).json({ error: 'Failed to delete feedback', details: err.message });
   }
 });
 

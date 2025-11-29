@@ -28,6 +28,14 @@ const feedbackSchema = new mongoose.Schema({
   createdAt: {
     type: Date,
     default: Date.now
+  },
+  updatedAt: {
+    type: Date,
+    default: null
+  },
+  isEdited: {
+    type: Boolean,
+    default: false
   }
 });
 

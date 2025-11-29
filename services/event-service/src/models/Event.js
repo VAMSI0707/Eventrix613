@@ -53,7 +53,7 @@ const eventSchema = new mongoose.Schema({
   },
   imageUrl: {
     type: String,
-    default: 'https://via.placeholder.com/400x300?text=Event+Image'
+    default: 'https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=800&h=600&fit=crop'
   },
   organizer: {
     type: String,
@@ -83,10 +83,24 @@ const eventSchema = new mongoose.Schema({
   }
 });
 
-// Update availableSeats on save
+// Update availableSeats and set category-specific image on save
 eventSchema.pre('save', function(next) {
   if (this.isNew) {
     this.availableSeats = this.capacity;
+    
+    // Set category-specific placeholder if no image provided
+    if (!this.imageUrl || this.imageUrl === 'https://via.placeholder.com/400x300?text=Event+Image') {
+      const categoryImages = {
+        conference: 'https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=800&h=600&fit=crop',
+        workshop: 'https://images.unsplash.com/photo-1552664730-d307ca884978?w=800&h=600&fit=crop',
+        seminar: 'https://images.unsplash.com/photo-1475721027785-f74eccf877e2?w=800&h=600&fit=crop',
+        concert: 'https://images.unsplash.com/photo-1501281668745-f7f57925c3b4?w=800&h=600&fit=crop',
+        sports: 'https://images.unsplash.com/photo-1461896836934-ffe607ba8211?w=800&h=600&fit=crop',
+        festival: 'https://images.unsplash.com/photo-1533174072545-7a4b6ad7a6c3?w=800&h=600&fit=crop',
+        other: 'https://images.unsplash.com/photo-1492684223066-81342ee5ff30?w=800&h=600&fit=crop'
+      };
+      this.imageUrl = categoryImages[this.category] || categoryImages.other;
+    }
   }
   this.updatedAt = Date.now();
   next();

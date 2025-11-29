@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import Navbar from './components/Navbar';
 import Login from './pages/Login';
 import Register from './pages/Register';
@@ -13,6 +15,7 @@ import './App.css';
 function App() {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [loggingOut, setLoggingOut] = useState(false);
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -31,9 +34,13 @@ function App() {
   };
 
   const handleLogout = () => {
-    localStorage.removeItem('token');
-    localStorage.removeItem('user');
-    setUser(null);
+    setLoggingOut(true);
+    setTimeout(() => {
+      localStorage.removeItem('token');
+      localStorage.removeItem('user');
+      setUser(null);
+      setLoggingOut(false);
+    }, 1000);
   };
 
   if (loading) {
@@ -42,7 +49,28 @@ function App() {
 
   return (
     <Router>
+      {loggingOut && (
+        <div className="fullscreen-loader">
+          <div className="loader-content">
+            <div className="spinner"></div>
+            <h2>Logging you out...</h2>
+            <p>Please wait</p>
+          </div>
+        </div>
+      )}
       <div className="App">
+        <ToastContainer
+          position="top-right"
+          autoClose={3000}
+          hideProgressBar={false}
+          newestOnTop={true}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+          theme="light"
+        />
         <Navbar user={user} onLogout={handleLogout} />
         <div className="container">
           <Routes>

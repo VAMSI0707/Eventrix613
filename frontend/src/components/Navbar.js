@@ -23,8 +23,8 @@ function Navbar({ user, onLogout }) {
             </>
           ) : (
             <>
-              <Link to="/login" className="btn btn-primary">Login</Link>
-              <Link to="/register" className="btn btn-primary">Register</Link>
+              <Link to="/login" className="btn btn-login">Login</Link>
+              <Link to="/register" className="btn btn-register">Register</Link>
             </>
           )}
         </div>

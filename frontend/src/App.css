@@ -1,14 +1,8 @@
 .App {
   min-height: 100vh;
   position: relative;
-  isolation: isolate;
-  z-index: 0;
-  background-image: linear-gradient(rgba(8, 45, 73, 0.82), rgba(8, 45, 73, 0.78));
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
   background-attachment: fixed;
-  overflow: hidden;
 }
 
 .loading {
@@ -34,44 +28,55 @@
 
 .btn:hover {
   transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(0, 120, 255, 0.3);
+  box-shadow: 0 4px 12px rgba(224, 58, 62, 0.3);
 }
 
 .btn-primary {
-  background: var(--primary-gradient);
+  background: linear-gradient(135deg, #E03A3E 0%, #c02a2e 100%);
   color: white;
   border: none;
+  box-shadow: 0 4px 12px rgba(224, 58, 62, 0.3);
 }
 
 .btn-primary:hover {
-  box-shadow: 0 6px 16px rgba(0, 120, 255, 0.4);
+  box-shadow: 0 6px 20px rgba(224, 58, 62, 0.4);
+  transform: translateY(-2px);
 }
 
 .btn-secondary {
-  background: var(--gray);
+  background: linear-gradient(135deg, #6c757d 0%, #5a6268 100%);
   color: white;
+  border: none;
+  box-shadow: 0 4px 12px rgba(108, 117, 125, 0.3);
 }
 
 .btn-secondary:hover {
-  background: var(--dark);
+  box-shadow: 0 6px 20px rgba(108, 117, 125, 0.4);
+  transform: translateY(-2px);
 }
 
 .btn-danger {
-  background: var(--error);
+  background: linear-gradient(135deg, #E03A3E 0%, #c02a2e 100%);
   color: white;
+  border: none;
+  box-shadow: 0 4px 12px rgba(224, 58, 62, 0.3);
 }
 
 .btn-danger:hover {
-  background: #dc2626;
+  box-shadow: 0 6px 20px rgba(224, 58, 62, 0.4);
+  transform: translateY(-2px);
 }
 
 .btn-success {
-  background: var(--success);
+  background: linear-gradient(135deg, #E03A3E 0%, #c02a2e 100%);
   color: white;
+  border: none;
+  box-shadow: 0 4px 12px rgba(224, 58, 62, 0.3);
 }
 
 .btn-success:hover {
-  background: #059669;
+  box-shadow: 0 6px 20px rgba(224, 58, 62, 0.4);
+  transform: translateY(-2px);
 }
 
 input, select, textarea {
@@ -135,4 +140,52 @@ input:focus, select:focus, textarea:focus {
 
 .fade-in {
   animation: fadeIn 0.6s ease;
+}
+
+
+/* Fullscreen Loader */
+.fullscreen-loader {
+  position: fixed;
+  top: 60px;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+  animation: fadeIn 0.3s ease;
+}
+
+.loader-content {
+  text-align: center;
+  color: #E03A3E;
+}
+
+.spinner {
+  width: 60px;
+  height: 60px;
+  border: 5px solid rgba(224, 58, 62, 0.2);
+  border-top: 5px solid #E03A3E;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin: 0 auto 30px;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.loader-content h2 {
+  font-size: 1.8rem;
+  margin-bottom: 10px;
+  font-weight: 600;
+  color: #E03A3E;
+}
+
+.loader-content p {
+  font-size: 1.1rem;
+  color: #666;
 }

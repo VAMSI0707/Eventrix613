@@ -20,20 +20,33 @@ function Login({ onLogin }) {
         password
       });
 
-      onLogin(response.data.token, response.data.user);
+      // Show loader for 1 second before redirecting
+      setTimeout(() => {
+        onLogin(response.data.token, response.data.user);
+        setLoading(false);
+      }, 1000);
     } catch (err) {
       setError(err.response?.data?.error || 'Login failed');
-    } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="auth-container">
-      <div className="auth-card">
-        <h2>Login</h2>
-        {error && <div className="error">{error}</div>}
-        <form onSubmit={handleSubmit}>
+    <>
+      {loading && (
+        <div className="fullscreen-loader">
+          <div className="loader-content">
+            <div className="spinner"></div>
+            <h2>Logging you in...</h2>
+            <p>Please wait</p>
+          </div>
+        </div>
+      )}
+      <div className="auth-container">
+        <div className="auth-card">
+          <h2>Login</h2>
+          {error && <div className="error">{error}</div>}
+          <form onSubmit={handleSubmit}>
           <input
             type="email"
             placeholder="Email"
@@ -54,6 +67,7 @@ function Login({ onLogin }) {
         </form>
       </div>
     </div>
+    </>
   );
 }
 

@@ -15,7 +15,7 @@ ENV REACT_APP_EVENT_API_URL=${REACT_APP_EVENT_API_URL}
 ENV REACT_APP_BOOKING_API_URL=${REACT_APP_BOOKING_API_URL}
 
 # Install dependencies
-RUN npm ci
+RUN npm install
 
 # Copy source code
 COPY . .

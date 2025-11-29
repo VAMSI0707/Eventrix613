@@ -92,6 +92,7 @@ router.post('/', verifyToken, async (req, res) => {
       eventTitle: event.title,
       eventDate: event.date,
       eventVenue: event.venue,
+      eventTime: event.time,
       numberOfTickets,
       pricePerTicket: event.price,
       paymentMethod: paymentMethod || 'credit_card'
@@ -186,7 +187,11 @@ router.get('/', verifyToken, async (req, res) => {
 // GET /api/bookings/event/:eventId/me - Check if the user has a booking for an event
 router.get('/event/:eventId/me', verifyToken, async (req, res) => {
   try {
-    const booking = await Booking.findOne({ eventId: req.params.eventId, userId: req.user._id });
+    const booking = await Booking.findOne({ 
+      eventId: req.params.eventId, 
+      userId: req.user._id,
+      bookingStatus: { $ne: 'cancelled' }
+    });
 
     if (!booking) {
       return res.json({ hasBooking: false });
@@ -373,6 +378,41 @@ router.get('/event/:eventId', verifyToken, async (req, res) => {
   } catch (err) {
     console.error('Get event bookings error:', err);
     res.status(500).json({ error: 'Failed to fetch bookings', details: err.message });
+  }
+});
+
+module.exports = router;
+
+
+// PATCH /api/bookings/event/:eventId/cancel-all - Cancel all bookings for an event (internal use)
+router.patch('/event/:eventId/cancel-all', async (req, res) => {
+  try {
+    const { eventId } = req.params;
+
+    // Find all bookings for this event that are not already cancelled
+    const bookings = await Booking.find({
+      eventId,
+      bookingStatus: { $ne: 'cancelled' }
+    });
+
+    // Update all bookings to cancelled status
+    await Booking.updateMany(
+      { eventId, bookingStatus: { $ne: 'cancelled' } },
+      { 
+        $set: { 
+          bookingStatus: 'cancelled',
+          paymentStatus: 'refunded'
+        } 
+      }
+    );
+
+    res.json({
+      message: 'All bookings cancelled successfully',
+      count: bookings.length
+    });
+  } catch (err) {
+    console.error('Cancel all bookings error:', err);
+    res.status(500).json({ error: 'Failed to cancel bookings', details: err.message });
   }
 });
 
