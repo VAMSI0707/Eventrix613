@@ -96,7 +96,7 @@ Point the app at your running backend services by adjusting the `REACT_APP_*` UR
      -H "Content-Type: application/json" \
      -d '{
        "name": "Event Manager",
-       "email": "admin@example.com",
+       "email": "admin@umd.edu",
        "password": "supersecure",
        "role": "admin"
      }'

@@ -1,6 +1,21 @@
 version: '3.8'
 
 services:
+  # Reverse Proxy (HTTPS)
+  caddy:
+    image: caddy:latest
+    container_name: caddy
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile
+    depends_on:
+      - frontend
+    networks:
+      - event-platform-network
+
   # MongoDB Database
   mongodb:
     image: mongo:7

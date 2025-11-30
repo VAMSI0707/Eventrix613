@@ -1,0 +1,3 @@
+eventrix.duckdns.org {
+    reverse_proxy frontend:80
+}
