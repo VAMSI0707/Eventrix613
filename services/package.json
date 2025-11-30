@@ -1,0 +1,8 @@
+{
+  "name": "eventrix-backend-services",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "coverage:all": "npm --prefix auth-service run test:coverage && npm --prefix event-service run test:coverage && npm --prefix booking-service run test:coverage"
+  }
+}
